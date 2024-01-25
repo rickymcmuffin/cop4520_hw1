@@ -7,8 +7,8 @@ use std::thread;
 use std::thread::JoinHandle;
 use std::time::Instant;
 
-const LIMIT: u64 = 10_u64.pow(7);
-const RUN_SINGLE: bool = true;
+const LIMIT: u64 = 10_u64.pow(8);
+const RUN_SINGLE: bool = false;
 
 fn main() {
     let now = Instant::now();
@@ -25,7 +25,8 @@ fn main() {
     if RUN_SINGLE {
         let now = Instant::now();
         let (sum2, num_primes2, top_primes2) = find_primes_single();
-        println!("{}, {}, {}", sum2, num_primes2, now.elapsed().as_millis());
+        let elapsed = now.elapsed().as_millis();
+        println!("{}, {}, {}", elapsed, num_primes2, sum2);
         println!("{:?}", top_primes2);
     }
 }
@@ -87,10 +88,10 @@ fn find_primes_parallel() -> (u64, u64, VecDeque<u64>) {
     // get return variables
     let sum = sum.lock().unwrap();
     let num_primes = num_primes.lock().unwrap();
-    let top_primes = top_primes.lock().unwrap().clone();
+    let all_primes = top_primes.lock().unwrap().clone();
 
     print!("\r");
-    return (*sum, *num_primes, top_primes);
+    return (*sum, *num_primes, all_primes);
 }
 
 // takes in all shared memory
